@@ -5,7 +5,6 @@
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
-#include <conio.h>
 
 // Definir la estructura para las subcarpetas y archivos .txt
 typedef struct {
@@ -20,7 +19,6 @@ void agregarItemALista(List *lista, const char *nombre) {
 }
 
 // Función para obtener el nombre de un item en la lista
-
 const char *getItemNombre(List *lista, int seleccion) {
   Item *item = list_get(lista, seleccion - 1); // Ajuste de índice
   return item->nombre;
@@ -40,7 +38,7 @@ void mostrarContenidoDirectorio(const char *ruta, HashMap *carpetasPrincipales,
   }
 
   // Imprimir el contenido del directorio
-  printf("\nContenido de la carpeta %s:\n", ruta);
+  printf("\n-----Listado de regiones-----\n");
 
   int opcion = 1;
 
@@ -48,7 +46,7 @@ void mostrarContenidoDirectorio(const char *ruta, HashMap *carpetasPrincipales,
     if (strcmp(entrada->d_name, ".") != 0 &&
         strcmp(entrada->d_name, "..") != 0) {
       // Agregar cada carpeta principal a la tabla hash
-      insertMap(carpetasPrincipales, entrada->d_name, NULL); 
+      insertMap(carpetasPrincipales, entrada->d_name, NULL);
       printf("%d: %s\n", opcion, entrada->d_name);
 
       // Agregar la carpeta principal a la lista de subcarpetas
@@ -76,9 +74,6 @@ void mostrarContenidoArchivo(const char *ruta, List *archivosTxt) {
   // Agregar el archivo a la lista de archivos .txt
   agregarItemALista(archivosTxt, ruta);
 
-  // Imprimir el contenido del archivo de texto
-  printf("\nContenido del archivo %s:\n", ruta);
-
   while ((caracter = fgetc(archivo)) != EOF) {
     printf("%c", caracter);
   }
@@ -101,7 +96,7 @@ void explorarArchivosTxt(const char *ruta, List *archivosTxt) {
   int opcion = 1;
 
   // Mostrar los archivos .txt y permitir al usuario seleccionar uno
-  printf("\nContenido de la carpeta %s:\n", ruta);
+  printf("\n-----Tipos de informacion-----\n");
 
   while ((entrada = readdir(directorio)) != NULL) {
     if (strcmp(entrada->d_name, ".") != 0 &&
@@ -117,8 +112,9 @@ void explorarArchivosTxt(const char *ruta, List *archivosTxt) {
 
   // Pedir al usuario que seleccione un archivo .txt
   int seleccion;
-  printf("\nSeleccione un archivo .txt (ingrese el número): ");
+  printf("\nSeleccione un tipo de informacion: ");
   scanf("%d", &seleccion);
+  printf("\n");
 
   // Obtener el nombre del archivo .txt seleccionado
   const char *archivoTxt = getItemNombre(archivosTxt, seleccion);
@@ -149,7 +145,7 @@ void explorarSubCarpetas(const char *ruta, List *subCarpetas,
   int opcion = 1;
 
   // Mostrar las subcarpetas y permitir al usuario seleccionar una
-  printf("\nContenido de la carpeta %s:\n", ruta);
+  printf("\n-----Listado de areas protegidas-----\n");
 
   while ((entrada = readdir(directorio)) != NULL) {
     if (strcmp(entrada->d_name, ".") != 0 &&
@@ -165,7 +161,7 @@ void explorarSubCarpetas(const char *ruta, List *subCarpetas,
 
   // Pedir al usuario que seleccione una subcarpeta
   int seleccion;
-  printf("\nSeleccione una subcarpeta (ingrese el número): ");
+  printf("\nSeleccione un area protegida: ");
   scanf("%d", &seleccion);
 
   // Obtener el nombre de la subcarpeta seleccionada
@@ -199,7 +195,7 @@ void explorarCarpetas(const char *ruta, HashMap *carpetasPrincipales,
   // Mostrar las carpetas principales y permitir al usuario seleccionar una
   mostrarContenidoDirectorio(ruta, carpetasPrincipales, subCarpetas,
                              archivosTxt);
-  printf("\nSeleccione una carpeta principal (ingrese el número): ");
+  printf("\nSeleccione una region: ");
   scanf("%d", &seleccion);
 
   // Obtener el nombre de la carpeta principal seleccionada
@@ -224,13 +220,18 @@ int main() {
   // Crear la lista para las subcarpetas y archivos .txt
   List *subCarpetas = createList();
   List *archivosTxt = createList();
+  printf("    ______         ______                 _      __ \n");
+  printf("   / ____/________/_  __/___  __  _______(_)____/ /_\n");
+  printf("  / __/ / ___/ __ \\/ / / __ \\/ / / / ___/ / ___/ __/\n");
+  printf(" / /___/ /__/ /_/ / / / /_/ / /_/ / /  / (__  ) /_  \n");
+  printf("/_____/\\___/\\____/_/  \\____/\\____/_/  /_/____/\\__/  \n");
+  printf("                                                    \n");
 
   const char *nuevaRuta = "regiones";
 
   explorarCarpetas(nuevaRuta, carpetasPrincipales, subCarpetas, archivosTxt);
   // Explorar recursivamente todas las carpetas y archivos
 
-  // Liberar memoria de la tabla hash y las listas
   // Liberar memoria de la tabla hash y las listas
   destroyMap(carpetasPrincipales); // Agrega esta línea para liberar la memoria
                                    // de la tabla hash
